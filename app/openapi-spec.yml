@@ -28,21 +28,11 @@ paths:
                   type: "array"
                   items:
                     properties:
+                      product_id:
+                        type: "number"
                       name:
                         type: "string"
-                      color:
-                        type: "string"
-                      dimensions:
-                        type: "object"
-                        items:
-                          properties:
-                            height:
-                              type: "string"
-                            width:
-                              type: "string"
-                            depth:
-                              type: "string"
-                      productCluster:
+                      price:
                         type: "string"
         "404":
           description: "Resource not found"
@@ -71,19 +61,7 @@ paths:
                     properties:
                       name:
                         type: "string"
-                      color:
-                        type: "string"
-                      dimensions:
-                        type: "object"
-                        items:
-                          properties:
-                            height:
-                              type: "string"
-                            width:
-                              type: "string"
-                            depth:
-                              type: "string"
-                      productCluster:
+                      price:
                         type: "string"
       responses:
         "201":
@@ -108,8 +86,8 @@ paths:
                   type: "array"
                   items:
                     properties:
-                      art_id:
-                        type: "string"
+                      article_id:
+                        type: "number"
                       name:
                         type: "string"
                       stock:
@@ -139,8 +117,6 @@ paths:
                   type: "array"
                   items:
                     properties:
-                      art_id:
-                        type: "string"
                       name:
                         type: "string"
                       stock:

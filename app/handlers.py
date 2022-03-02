@@ -67,34 +67,34 @@ def create_articles(body):
 
     # Loop through list of articles and add each to database if not already in db
     for article in articles:
-        src_id = article.get('art_id')
         name = article.get('name')
         stock = article.get('stock')
         
         # Check if article already exists
         existing_article = Article.query \
             .filter(Article.name == name) \
-            .filter(Article.src_id == src_id) \
             .one_or_none()
         
         # If it does not already exist, then add the article with provided stock
         if existing_article is None:
        
-            # Add product to database
-            a = Article(name=name, src_id=src_id, stock=stock)
+            # Add article to database
+            a = Article(name=name, stock=stock)
             db.session.add(a)
-            
-            # Add new_product to log of which products where added
+            # Add new article to the log tracking which articles were added
             add_log.append(a)
+            
         # If the article does already exist, then add the new stock to existing stock
         else: 
-            # TODO: add existing stock
-            print(existing_article)
+            new_stock = int(stock)
+            existing_article.stock += new_stock
+            # Add updated article to the log tracking which articles were added
+            add_log.append(existing_article)
             
     # Then commit all database changes
     db.session.commit()
     
-    # Return serialized version of the products added to db
+    # Return serialized version of the articles added to db
     article_schema = ArticleSchema(many=True)
     if len(add_log) > 0:
         added_articles = jsonify(article_schema.dump(add_log))
@@ -108,6 +108,8 @@ def delete_product_inventory():
 
 def read_product_inventory():
     #TODO:
+    
+    # join product, bom, article, add calculated column
     return None
 
 def upload_file(formData):
