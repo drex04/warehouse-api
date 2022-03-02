@@ -1,0 +1,167 @@
+swagger: "2.0"
+info:
+  description: "This is a prototype retail API."
+  version: "1.0.0"
+  title: "Product Info API"
+  contact:
+    email: "drew.nollsch@gmail.com"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+basePath: "/api"
+paths:
+  /products:
+    get:
+      operationId: "handlers.read_all_products"
+      tags:
+        - "products"
+      summary: "Read all product entries from database"
+      description: "Read all product info from database"
+      responses:
+        "200":
+          description: "Successfully read product data"
+          schema:
+            type: "object"
+            items:
+              properties:
+                products:
+                  type: "array"
+                  items:
+                    properties:
+                      name:
+                        type: "string"
+                      color:
+                        type: "string"
+                      dimensions:
+                        type: "object"
+                        items:
+                          properties:
+                            height:
+                              type: "string"
+                            width:
+                              type: "string"
+                            depth:
+                              type: "string"
+                      productCluster:
+                        type: "string"
+        "404":
+          description: "Resource not found"
+    post:
+      operationId: "handlers.create_products"
+      tags:
+        - "products"
+      summary: "Add new products to the database"
+      description: "Submit JSON data to add a list of new products"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "List of new products to be added to database"
+          required: true
+          schema:
+            type: "object"
+            items:
+              properties:
+                products:
+                  type: "array"
+                  items:
+                    properties:
+                      name:
+                        type: "string"
+                      color:
+                        type: "string"
+                      dimensions:
+                        type: "object"
+                        items:
+                          properties:
+                            height:
+                              type: "string"
+                            width:
+                              type: "string"
+                            depth:
+                              type: "string"
+                      productCluster:
+                        type: "string"
+      responses:
+        "201":
+          description: "Products added successfully"
+        "405":
+          description: "Invalid input"
+  /articles:
+    get:
+      operationId: "handlers.read_all_articles"
+      tags:
+        - "articles"
+      summary: "Read all article entries from database"
+      description: "Read all article info from database"
+      responses:
+        "200":
+          description: "Successfully read article data"
+          schema:
+            type: "object"
+            items:
+              properties:
+                inventory:
+                  type: "array"
+                  items:
+                    properties:
+                      art_id:
+                        type: "string"
+                      name:
+                        type: "string"
+                      stock:
+                        type: "number"
+        "404":
+          description: "Resource not found"
+    post:
+      operationId: "handlers.create_articles"
+      tags:
+        - "articles"
+      summary: "Add new articles to the database"
+      description: "Submit JSON data to add a list of new articles"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "List of new articles to be added to database"
+          required: true
+          schema:
+            type: "object"
+            items:
+              properties:
+                inventory:
+                  type: "array"
+                  items:
+                    properties:
+                      art_id:
+                        type: "string"
+                      name:
+                        type: "string"
+                      stock:
+                        type: "number"
+      responses:
+        "201":
+          description: "Articles added successfully"
+        "405":
+          description: "Invalid input"
+  /upload:
+    post:
+      operationId: "handlers.upload_file"
+      summary: Uploads a file.
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: formData
+          type: file
+          required: true
+          description: The file to upload.
+      responses:
+        "201":
+          description: "Successfully uploaded file"

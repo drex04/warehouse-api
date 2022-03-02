@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Products Info Page</title>
+  </head>
+  <body>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data action="/api/upload">
+      <label>Warning: this only accepts files with a .json file extension.</label>
+      <input type=file name=formData>
+      <input type=submit value=Upload>
+    </form>
+  </body>
+</html>
