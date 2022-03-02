@@ -48,11 +48,8 @@ for product in PRODUCTS:
     components = product['contain_articles']
     
     for component in components:
-        print(component)
         article_id = int(component.get('art_id'))
-        print(article_id)
         required_article_qty = int(component.get('amount_of'))
-        print(required_article_qty)
         i = Inventory(product_id=product_id, article_id=article_id, required_article_qty=required_article_qty)
         
         db.session.add(i)

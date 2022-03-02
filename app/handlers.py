@@ -4,7 +4,9 @@ from models import (
     Product,
     ProductSchema,
     Article,
-    ArticleSchema
+    ArticleSchema,
+    Inventory,
+    InventorySchema
 )
 import json
 
@@ -31,6 +33,7 @@ def create_products(body):
     for product in products:
         name = product.get('name')
         price = product.get('price')
+        components = product.get('contain_articles')
         
         # Check if product already exists
         existing_product = Product.query \
@@ -42,15 +45,33 @@ def create_products(body):
         if existing_product is None:
             # Add product to database
             p = Product(name=name, price=price)
-            
-            # TODO: add Product-Article relations to database
-            
             db.session.add(p)
-            # Log which new products were added
+            # Commit changes to add new product  
+            db.session.commit()
+            # Log which new product was added
             add_log.append(p)
+        
+            # Get the ID of the newly created Product so that records can be added to Inventory table
+            stmt = db.select(Product).where(
+                db.and_(
+                    Product.name == product['name'],
+                    Product.price == product['price']
+                )
+            )
+            result = db.session.execute(stmt)
+            product_id = result.fetchone().Product.product_id
             
-    # Then commit all database changes
-    db.session.commit()
+            # Iterate over component articles and add records to Inventory table    
+            for component in components:
+                article_id = int(component.get('art_id'))
+                required_article_qty = int(component.get('amount_of'))
+                
+                i = Inventory(product_id=product_id, article_id=article_id, required_article_qty=required_article_qty)
+                
+                db.session.add(i)
+                
+            # Commit Inventory db changes
+            db.session.commit()
     
     # Return serialized version of the products added to db
     product_schema = ProductSchema(many=True)
