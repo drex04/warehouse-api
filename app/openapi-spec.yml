@@ -126,10 +126,35 @@ paths:
           description: "Articles added successfully"
         "405":
           description: "Invalid input"
+  /products/{productId}:
+    post:
+      operationId: "handlers.sell_product"
+      tags:
+        - "products"
+      summary: "Sell a product and remove its component articles from inventory"
+      description: "Sell a product and remove its component articles from inventory"
+      consumes:
+        - "application/x-www-form-urlencoded"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "productId"
+          description: "ID of the product to be sold"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "One product removed from inventory"
+        "405":
+          description: "Invalid input"
   /upload:
     post:
       operationId: "handlers.upload_file"
       summary: Uploads a file.
+      tags:
+        - "file_upload"
       consumes:
         - multipart/form-data
       parameters:
@@ -141,3 +166,33 @@ paths:
       responses:
         "201":
           description: "Successfully uploaded file"
+        "409":
+          description: "All products already exist in database"
+  /inventory:
+    get:
+      operationId: "handlers.read_product_inventory"
+      tags:
+        - "inventory"
+      summary: "Show current product inventory"
+      description: "Show current product inventory"
+      responses:
+        "200":
+          description: "Successfully read product inventory data"
+          schema:
+            type: "object"
+            items:
+              properties:
+                product_inventory:
+                  type: "array"
+                  items:
+                    properties:
+                      product_id:
+                        type: "number"
+                      product_name:
+                        type: "string"
+                      product_price:
+                        type: "string"
+                      product_stock:
+                        type: "number"
+        "404":
+          description: "Resource not found"

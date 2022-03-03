@@ -20,7 +20,7 @@ class Inventory(db.Model):
     __tablename__ = 'inventory'
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), primary_key=True)
     article_id = db.Column(db.Integer, db.ForeignKey('article.article_id'), primary_key=True)
-    required_article_qty = db.Column(db.String)
+    required_article_qty = db.Column(db.Integer)
     product = db.relationship("Product", back_populates="articles")
     article = db.relationship("Article", back_populates="products")
 

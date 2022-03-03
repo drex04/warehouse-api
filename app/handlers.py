@@ -9,6 +9,7 @@ from models import (
     InventorySchema
 )
 import json
+import pandas as pd
 
 # Handler function for GET PRODUCTS endpoint
 def read_all_products():
@@ -123,15 +124,61 @@ def create_articles(body):
     else:
         abort(409, 'Article addition failed')
 
-def delete_product_inventory():
+def sell_product(productId):
     # TODO:
-    return None
+    # "Sell" a product and decrement the stock of its component articles by the required amount
+    select_stmt = db.select(Inventory, Article).join(Inventory.product).join(Inventory.article).where(Inventory.product_id == productId)
+    
+    with db.engine.connect() as conn:
+        results = conn.execute(select_stmt)
+        df = pd.DataFrame(data=results)
+        
+        # if any required_article_quantity is more than current article stock, return an error
+        insufficient_articles = df.loc[df['required_article_qty'] > df['stock'], ['product_id', 'article_id', 'required_article_qty', 'stock']]
+        
+        if len(insufficient_articles) > 0:
+            abort(409, 'Insufficient product inventory')
+        else:
+            # otherwise, remove required_article_quantity from the current article stock
+            new_df = df
+            new_df['stock'] = new_df['stock'] - new_df['required_article_qty']
+            new_stock_df = new_df[['article_id', 'stock']]
+            new_stock = new_stock_df.to_dict('records')
+            
+            for article in new_stock:
+                # Add updated stock to database
+                update_stmt = (
+                    db.update(Article).
+                    where(Article.article_id == article['article_id']).
+                    values(stock=article['stock'])
+                )
+                update_result = conn.execute(update_stmt)
+        # Then commit all database changes
+        db.session.commit()
+            
+        # Return updated product inventory
+        response = read_product_inventory()
+        return response
 
 def read_product_inventory():
-    #TODO:
-    
-    # join product, bom, article, add calculated column
-    return None
+    # First, find minimum available inventory for each product
+    stmt = db.select(Inventory, Product, Article).join(Inventory.product).join(Inventory.article)
+        
+    with db.engine.connect() as conn:
+        results = conn.execute(stmt)
+        df= pd.DataFrame(data=results)
+        # Calculate hypothetical product stock as if each article was the only component
+        df['product_stock'] = df.stock // df.required_article_qty
+        
+        # Group by the minimum product stock per product ID
+        group_df = df.loc[df.groupby('product_id').product_stock.idxmin()]
+        prod_inv_df = group_df[['product_id', 'name', 'price', 'product_stock']]
+        
+        # Convert to JSON format response
+        prod_inv = prod_inv_df.to_dict('records')
+        prod_inv = {'product_inventory': prod_inv}
+        
+    return prod_inv
 
 def upload_file(formData):
     # parse file and upload products to DB
