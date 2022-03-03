@@ -1,4 +1,4 @@
-# Warehouse REST API
+# Warehouse Inventory REST API
 
 ## Context
 
@@ -37,7 +37,7 @@ If I were building this API for a production environment instead of for an inter
 - Unit tests
 - Integration tests
 - End-to-end tests
-- Error handling
+- Additional error handling
 - Logging
 
 I would also migrate the database to PostgreSQL hosted on a cloud db service like AWS RDS or Google Cloud SQL. If this POC were to be extended to a more fully-featured application with authentication flow and many more database tables, I would consider migrating this project from Flask to Django to take advantage of its extensive built-in features.
