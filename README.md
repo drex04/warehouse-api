@@ -1,4 +1,10 @@
-# Product Info REST API
+# Warehouse REST API
+
+## Context
+
+This API was built as a take-home technical interview with the assignment to build a back-end API to manage warehouse inventory.
+
+Note to reviewer: I have removed the 'art_id' field from the provided JSON input because I have used an auto-generated sequential ID for the primary key (PK) of the Article database table. If the ID is created manually through JSON uploads there is a risk of creating multiple Article records with the same ID.
 
 ## Functional Requirements
 
@@ -11,12 +17,8 @@
 
 ## Non-functional Requirements
 
-- Since this is an interview assignment with a limited timeframe, and not a real production environment serving millions of users, I will assume that low scalability, reliability, availability, etc. are required at this stage.
-- Since this project is created and maintained by one developer I will optimize for maintainability by utilizing a small set of popular and well-documented tools that are designed to play well together.
-
-## Project notes
-
-I have decided to build a backend warehouse management API with Python and Flask because I was given the instruction: 'since it is for a backend role, we expect a backend solution'. I have also removed the 'art_id' field from the provided JSON input because I want to use an auto-generated sequential ID for the primary key (PK) of the article database table. If the ID is created manually through JSON uploads, then it could create multiple different records with the same ID. This would make the relationship between Product and Article unclear. Because any existing database is deleted when the database is (re)initialized, the Article table is always loaded before Product table, and Articles are loaded sequentially, the relationships between initial products and articles will always be correct.
+- Since this is an interview assignment with a limited timeframe and not a real production environment, I will assume that designing for high scalability, reliability, availability, etc. is not required at this stage. In addition, since this is an internal business application it will probably have thousands of users rather than millions of users which could be expected for a consumer-facing application.
+- Since this project is created and maintained by a single developer I will optimize for maintainability by utilizing a small set of popular and well-documented tools that are designed to play well together.
 
 ## Tech Stack
 
@@ -37,6 +39,8 @@ If I were building this API for a production environment instead of for an inter
 - End-to-end tests
 - Error handling
 - Logging
+
+I would also migrate the database to PostgreSQL hosted on a cloud db service like AWS RDS or Google Cloud SQL. If this POC were to be extended to a more fully-featured application with authentication flow and many more database tables, I would consider migrating this project from Flask to Django to take advantage of its extensive built-in features.
 
 # Run Instructions
 
