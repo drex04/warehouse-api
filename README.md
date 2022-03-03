@@ -49,19 +49,29 @@ If I were building this API for a production environment instead of for an inter
 - Then, run:
   `python server.py` to start the Flask API server.
 
-Open the link provided by the API server and you should see:
+Open the link provided by the API server in your web browser and:
 
-- At `/`, you'll see the homepage with file upload form
-- At `/api/products` you can view the list of all products
-- At `/api/articles` you can view the list of all products
+- At `/` you'll see the homepage with file upload form
 - At `/api/ui` you can explore a Swagger GUI of the OpenAPI specification
+- At `/api/inventory` you can view the list of all products with their current inventory
+- At `/api/products` you can view the list of all products with name and price
+- At `/api/articles` you can view the list of all articles with their current stock level
 
-## API Testing
+## API Endpoints
 
-You can test the ability of the API to add data by sending the data contained in `test-upload-products.json`, `test-upload-articles.json`, or any JSON following the same schema to the `${server IP}:{PORT}/api/products` POST endpoint with JSON in the request body.
+- Read current product inventory
+  - Send `GET` request to `/api/inventory`
+- Read all products
+  - Send `GET` request to `/api/products`
+- Read all articles
+  - Send `GET` request to `/api/articles`
+- Create new products
+  - Send `POST` request to `/api/products`
+- Create new articles and/or add stock
+  - Send `POST` request to `/api/articles`
+- Update inventory by "selling" a product:
+  - Send `POST` request to `/api/inventory/<productId>`
+- Upload file to create new products, create new articles, or add article stock
+  - Send `POST` request to `/api/upload`
 
-For example, using Postman:
-![Postman API test](/images/postman_screenshot.png)
-
-You can also test the API by using the homepage HTML form to upload a .json file.
-![HTML file upload](/images/file-upload.png)
+A Postman collection file with these requests preconfigured can be found in the `/test` folder of this project. Sample JSON files for testing the upload function are contained in the same folder.

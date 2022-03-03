@@ -1,8 +1,8 @@
 {
   "products": [
     {
-      "name": "Dining Chair",
-      "price": "50 EUR",
+      "name": "Office Desk",
+      "price": "175 EUR",
       "contain_articles": [
         {
           "art_id": "1",
@@ -10,26 +10,18 @@
         },
         {
           "art_id": "2",
-          "amount_of": "8"
+          "amount_of": "12"
         },
         {
-          "art_id": "3",
+          "art_id": "4",
           "amount_of": "1"
         }
       ]
     },
     {
-      "name": "Dining Table",
-      "price": "260 EUR",
+      "name": "Office Work Surface",
+      "price": "55 EUR",
       "contain_articles": [
-        {
-          "art_id": "1",
-          "amount_of": "4"
-        },
-        {
-          "art_id": "2",
-          "amount_of": "8"
-        },
         {
           "art_id": "4",
           "amount_of": "1"
