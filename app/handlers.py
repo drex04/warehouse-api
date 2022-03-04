@@ -125,7 +125,6 @@ def create_articles(body):
         abort(409, 'Article addition failed')
 
 def sell_product(productId):
-    # TODO:
     # "Sell" a product and decrement the stock of its component articles by the required amount
     select_stmt = db.select(Inventory, Article).join(Inventory.product).join(Inventory.article).where(Inventory.product_id == productId)
     

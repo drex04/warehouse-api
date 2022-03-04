@@ -127,7 +127,7 @@ paths:
         "405":
           description: "Invalid input"
   /products/{productId}:
-    post:
+    patch:
       operationId: "handlers.sell_product"
       tags:
         - "products"
