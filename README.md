@@ -44,10 +44,11 @@ Note to reviewer: I have removed the 'art_id' field from the provided JSON input
 Open the link provided by the API server in your web browser and:
 
 - At `/` you'll see the homepage with file upload form
-- At `/api/ui` you can explore a Swagger GUI of the OpenAPI specification
 - At `/api/inventory` you can view the list of all products with their current inventory
 - At `/api/products` you can view the list of all products with name and price
 - At `/api/articles` you can view the list of all articles with their current stock level
+- At `/api/ui` you can explore a Swagger GUI of the OpenAPI specification
+  ![Swagger UI](/images/swagger.png)
 
 ## API Endpoints
 
@@ -67,6 +68,8 @@ Open the link provided by the API server in your web browser and:
   - Send `POST` request to `/api/upload`
 
 A Postman collection file with these requests preconfigured can be found in the `/test` folder of this project. Sample JSON files for testing the upload function are contained in the same folder.
+
+![Postman](/images/postman.png)
 
 ## Compromises / Further Development
 

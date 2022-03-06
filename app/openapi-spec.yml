@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: "This is a prototype retail API."
+  description: "This is a prototype retail warehouse inventory API."
   version: "1.0.0"
-  title: "Product Info API"
+  title: "Warehouse Inventory API"
   contact:
     email: "drew.nollsch@gmail.com"
   license:
