@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "bc6c684b-40db-4163-9a8d-c95f9d4ee58a",
 		"name": "Warehouse-API",
+		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests a user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -44,7 +45,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"products\": [\n    {\n      \"name\": \"Office Desk\",\n      \"price\": \"175 EUR\",\n      \"contain_articles\": [\n        {\n          \"art_id\": \"1\",\n          \"amount_of\": \"4\"\n        },\n        {\n          \"art_id\": \"2\",\n          \"amount_of\": \"12\"\n        },\n        {\n          \"art_id\": \"4\",\n          \"amount_of\": \"1\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Office Work Surface\",\n      \"price\": \"55 EUR\",\n      \"contain_articles\": [\n        {\n          \"art_id\": \"4\",\n          \"amount_of\": \"1\"\n        }\n      ]\n    }\n  ]\n}\n",
+					"raw": "{\n  \"products\": [\n    {\n      \"name\": \"Dining Table\",\n      \"price\": \"175 EUR\",\n      \"contain_articles\": [\n        {\n          \"art_id\": \"1\",\n          \"amount_of\": \"4\"\n        },\n        {\n          \"art_id\": \"2\",\n          \"amount_of\": \"12\"\n        },\n        {\n          \"art_id\": \"4\",\n          \"amount_of\": \"1\"\n        }\n      ]\n    }\n  ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -95,10 +96,10 @@
 		{
 			"name": "Update inventory by 'selling' a product",
 			"request": {
-				"method": "POST",
+				"method": "PATCH",
 				"header": [],
 				"url": {
-					"raw": "http://192.168.2.5:8000/api/products/4",
+					"raw": "http://192.168.2.5:8000/api/products/1",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -110,7 +111,7 @@
 					"path": [
 						"api",
 						"products",
-						"4"
+						"1"
 					]
 				}
 			},

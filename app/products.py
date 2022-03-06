@@ -4,37 +4,48 @@ from models import (
     Product,
     ProductSchema,
     Article,
-    ArticleSchema,
-    Inventory,
-    InventorySchema
-)
-import json
+    Inventory
+    )
 import pandas as pd
 
-# Handler function for GET PRODUCTS endpoint
+# Handler function for GET Products endpoint
 def read_all_products():
     # Query the db to return all products
     products = Product.query.order_by(Product.product_id).all()
+
+    if len(products) < 1:
+        abort(404, 'No products exist in database')
+        
     # Serialize the query results to produce a response
     product_schema = ProductSchema(many=True)
     return product_schema.dump(products)
 
-def read_all_articles():
-    # Query the db to return all articles
-    articles = Article.query.order_by(Article.article_id).all()
-    # Serialize the query results to produce a response
-    article_schema = ArticleSchema(many=True)
-    return article_schema.dump(articles)
-
 # Handler function for POST /api/products endpoint
 def create_products(body):
-    products = body['products']
+    products = body.get('products', None)
+    if products == None:
+        abort(400, 'Invalid schema')
+    
     add_log = []
     # Loop through list of products and add each to database if not exists
     for product in products:
-        name = product.get('name')
-        price = product.get('price')
-        components = product.get('contain_articles')
+        name = product.get('name', None)
+        price = product.get('price', None)
+        components = product.get('contain_articles', None)
+        
+        # Data input validation
+        if name == None or price == None:
+            abort(400, 'Products must include a name and price')
+            
+        if len(components) < 1:
+            abort(400, 'Each product must be composed of at least one article')
+        else:
+            for component in components:
+                article_id = component.get('art_id', None)
+                required_article_qty = component.get('amount_of', None)
+                if article_id == None or required_article_qty == None:
+                    abort(400, 'Each component article must include a numerical ID and a required quantity')
+        
         
         # Check if product already exists
         existing_product = Product.query \
@@ -55,23 +66,28 @@ def create_products(body):
             # Get the ID of the newly created Product so that records can be added to Inventory table
             stmt = db.select(Product).where(
                 db.and_(
-                    Product.name == product['name'],
-                    Product.price == product['price']
+                    Product.name == name,
+                    Product.price == price
                 )
             )
             result = db.session.execute(stmt)
             product_id = result.fetchone().Product.product_id
             
-            # Iterate over component articles and add records to Inventory table    
+            # Iterate over component articles and add records to Inventory table                
             for component in components:
-                article_id = int(component.get('art_id'))
-                required_article_qty = int(component.get('amount_of'))
+                article_id = component.get('art_id', None)
+                required_article_qty = component.get('amount_of', None)
                 
+                if isinstance(article_id, str):
+                    article_id = int(article_id)
+                if isinstance(required_article_qty, str):
+                    required_article_qty = int(required_article_qty)
+                                
                 i = Inventory(product_id=product_id, article_id=article_id, required_article_qty=required_article_qty)
                 
                 db.session.add(i)
                 
-            # Commit Inventory db changes
+            # Commit Inventory table db changes
             db.session.commit()
     
     # Return serialized version of the products added to db
@@ -81,56 +97,17 @@ def create_products(body):
         return added_products, 201
     else:
         abort(409, 'All products already exist in database')
-        
-# Handler function for POST /api/articles endpoint
-def create_articles(body):
-    articles = body['inventory']
-    add_log = []
-
-    # Loop through list of articles and add each to database if not already in db
-    for article in articles:
-        name = article.get('name')
-        stock = article.get('stock')
-        
-        # Check if article already exists
-        existing_article = Article.query \
-            .filter(Article.name == name) \
-            .one_or_none()
-        
-        # If it does not already exist, then add the article with provided stock
-        if existing_article is None:
-       
-            # Add article to database
-            a = Article(name=name, stock=stock)
-            db.session.add(a)
-            # Add new article to the log tracking which articles were added
-            add_log.append(a)
-            
-        # If the article does already exist, then add the new stock to existing stock
-        else: 
-            new_stock = int(stock)
-            existing_article.stock += new_stock
-            # Add updated article to the log tracking which articles were added
-            add_log.append(existing_article)
-            
-    # Then commit all database changes
-    db.session.commit()
-    
-    # Return serialized version of the articles added to db
-    article_schema = ArticleSchema(many=True)
-    if len(add_log) > 0:
-        added_articles = jsonify(article_schema.dump(add_log))
-        return added_articles, 201
-    else:
-        abort(409, 'Article addition failed')
 
 def sell_product(productId):
-    # "Sell" a product and decrement the stock of its component articles by the required amount
+    # "Sell" a product and decrement the stock of its component articles by the required amount    
     select_stmt = db.select(Inventory, Article).join(Inventory.product).join(Inventory.article).where(Inventory.product_id == productId)
     
     with db.engine.connect() as conn:
         results = conn.execute(select_stmt)
         df = pd.DataFrame(data=results)
+ 
+        if len(df) < 1:
+            abort(404, 'Requested product not found in database')
         
         # if any required_article_quantity is more than current article stock, return an error
         insufficient_articles = df.loc[df['required_article_qty'] > df['stock'], ['product_id', 'article_id', 'required_article_qty', 'stock']]
@@ -166,6 +143,8 @@ def read_product_inventory():
     with db.engine.connect() as conn:
         results = conn.execute(stmt)
         df= pd.DataFrame(data=results)
+        if len(df) < 1:
+            abort(404, 'No products found in database')
         # Calculate hypothetical product stock as if each article was the only component
         df['product_stock'] = df.stock // df.required_article_qty
         
@@ -178,15 +157,3 @@ def read_product_inventory():
         prod_inv = {'product_inventory': prod_inv}
         
     return prod_inv
-
-def upload_file(formData):
-    # parse file and upload products to DB
-    body = json.load(formData)
-    if (body.get('products')):
-        response = create_products(body)
-        return response
-    elif (body.get('inventory')):
-        response = create_articles(body)
-        return response
-    else:
-        return 'File does not match required JSON schema', 400

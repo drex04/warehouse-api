@@ -12,7 +12,7 @@ basePath: "/api"
 paths:
   /products:
     get:
-      operationId: "handlers.read_all_products"
+      operationId: "products.read_all_products"
       tags:
         - "products"
       summary: "Read all product entries from database"
@@ -37,7 +37,7 @@ paths:
         "404":
           description: "Resource not found"
     post:
-      operationId: "handlers.create_products"
+      operationId: "products.create_products"
       tags:
         - "products"
       summary: "Add new products to the database"
@@ -70,7 +70,7 @@ paths:
           description: "Invalid input"
   /articles:
     get:
-      operationId: "handlers.read_all_articles"
+      operationId: "articles.read_all_articles"
       tags:
         - "articles"
       summary: "Read all article entries from database"
@@ -95,7 +95,7 @@ paths:
         "404":
           description: "Resource not found"
     post:
-      operationId: "handlers.create_articles"
+      operationId: "articles.create_articles"
       tags:
         - "articles"
       summary: "Add new articles to the database"
@@ -128,7 +128,7 @@ paths:
           description: "Invalid input"
   /products/{productId}:
     patch:
-      operationId: "handlers.sell_product"
+      operationId: "products.sell_product"
       tags:
         - "products"
       summary: "Sell a product and remove its component articles from inventory"
@@ -151,7 +151,7 @@ paths:
           description: "Invalid input"
   /upload:
     post:
-      operationId: "handlers.upload_file"
+      operationId: "utils.upload_file"
       summary: Uploads a file.
       tags:
         - "file_upload"
@@ -170,7 +170,7 @@ paths:
           description: "All products already exist in database"
   /inventory:
     get:
-      operationId: "handlers.read_product_inventory"
+      operationId: "products.read_product_inventory"
       tags:
         - "inventory"
       summary: "Show current product inventory"

@@ -30,18 +30,6 @@ Note to reviewer: I have removed the 'art_id' field from the provided JSON input
 
 ![Warehouse API Data Model](/images/data-model.png)
 
-## Compromises / Further Development
-
-If I were building this API for a production environment instead of for an interview assignment, I would add:
-
-- Unit tests
-- Integration tests
-- End-to-end tests
-- Additional error handling
-- Logging
-
-I would also migrate the database to PostgreSQL hosted on a cloud db service like AWS RDS or Google Cloud SQL. If this POC were to be extended to a more fully-featured application with authentication flow and many more database tables, I would consider migrating this project from Flask to Django to take advantage of its extensive built-in features.
-
 # Run Instructions
 
 - Clone or download the repository to your local environment
@@ -74,8 +62,19 @@ Open the link provided by the API server in your web browser and:
 - Create new articles and/or add stock
   - Send `POST` request to `/api/articles`
 - Update inventory by "selling" a product:
-  - Send `POST` request to `/api/inventory/<productId>`
+  - Send `PATCH` request to `/api/inventory/<productId>`
 - Upload file to create new products, create new articles, or add article stock
   - Send `POST` request to `/api/upload`
 
 A Postman collection file with these requests preconfigured can be found in the `/test` folder of this project. Sample JSON files for testing the upload function are contained in the same folder.
+
+## Compromises / Further Development
+
+If I were building this API for a production environment instead of for a time-limited interview assignment, I would add:
+
+- Unit tests
+- Integration tests
+- End-to-end tests
+- Logging
+
+I would also migrate the database to PostgreSQL hosted on a cloud db service like AWS RDS or Google Cloud SQL. If this POC were to be extended to a more fully-featured application with authentication flow and many more database tables, I would consider migrating this project from Flask to Django to take advantage of its extensive built-in features.

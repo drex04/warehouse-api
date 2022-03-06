@@ -24,8 +24,6 @@ class Inventory(db.Model):
     product = db.relationship("Product", back_populates="articles")
     article = db.relationship("Article", back_populates="products")
 
-
-
 class ProductSchema(mm.SQLAlchemyAutoSchema):
     class Meta:
         model = Product

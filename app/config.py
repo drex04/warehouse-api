@@ -12,7 +12,7 @@ app = conn_app.app
 
 # Configure SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.join(base_dir, 'warehouse.db')
-app.config['SQLALCHEMY_ECHO'] = True # TODO: change this to False in production
+app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Create SQLAlchemy db
